@@ -1,1 +1,7 @@
+build/
+dist/
+iso/
 memman/target/
+*.iso
+*.vdi
+*.img
