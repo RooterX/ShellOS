@@ -20,16 +20,21 @@ void shell_run() {
         char c = read_key();
 
         if (c == '\n') {
-            buffer[buf_pos] = '\0';
-            cursor_x = 0;
-            cursor_y++;
-            if (buf_pos > 0)
-                execute_command(buffer);
-            print("shellOS> ", 0x0A);
-            prompt_x = 9;
-            buf_pos = 0;
-
-        } else if (c == '\b') {
+    buffer[buf_pos] = '\0';
+    cursor_x = 0;
+    cursor_y++;
+    if (buf_pos > 0)
+        execute_command(buffer);
+    // limpar linha atual antes do prompt
+    for (int i = 0; i < 80; i++)
+        vga[cursor_y * 80 + cursor_x + i] = (0x0F << 8) | ' ';
+    // garantir que cursor esta no inicio da linha
+    cursor_x = 0;
+    print("shellOS> ", 0x0A);
+    prompt_x = 9;
+    buf_pos = 0;
+} 
+else if (c == '\b') {
             if (cursor_x > prompt_x && buf_pos > 0) {
                 cursor_x--;
                 buf_pos--;

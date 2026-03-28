@@ -77,6 +77,11 @@ char read_key() {
         while (!(inb(0x64) & 0x01));
         sc = inb(0x60);
     } while (sc & 0x80);
+
+    // teclas de funcao F1-F10 (0x3B - 0x44) — retorna scancode direto
+    if (sc >= 0x3B && sc <= 0x44)
+        return (char)sc;
+
     if (sc < sizeof(scancode_map))
         return scancode_map[sc];
     return 0;

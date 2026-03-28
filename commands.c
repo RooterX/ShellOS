@@ -1,5 +1,14 @@
+void cmd_write(char *args);
 void print(const char *str, unsigned char color);
 void clear_screen();
+typedef struct {
+    char name[32];
+    char data[4096];
+    int size;
+    int used;
+} File;
+
+File* fs_find(const char *dirname, const char *filename);
 extern int cursor_x;
 extern int cursor_y;
 extern int prompt_x;
@@ -25,6 +34,7 @@ void cmd_help() {
     print("  mkdir <nome>  - cria diretorio\n", 0x0F);
     print("  ls            - lista arquivos\n", 0x0F);
     print("  rm <dir/arq>  - remove arquivo\n", 0x0F);
+    print("  write <arq>   - editor de texto\n", 0x0F);
 }
 
 void cmd_echo(char *args) {
@@ -112,8 +122,26 @@ void execute_command(char *cmd) {
     else if (str_cmp(cmd, "mkdir") == 0) cmd_mkdir(args);
     else if (str_cmp(cmd, "ls")    == 0) cmd_ls();
     else if (str_cmp(cmd, "rm")    == 0) cmd_rm(args);
+else if (str_cmp(cmd, "write") == 0) cmd_write(args);
     else {
-        print(cmd, 0x0C);
-        print(": comando nao encontrado\n", 0x0C);
+        // tenta executar como arquivo em /file
+        File *f = fs_find("file", cmd);
+        if (f && f->size > 0) {
+            char line[80];
+            int lp = 0;
+            for (int i = 0; i <= f->size; i++) {
+                char ch = (i < f->size) ? f->data[i] : '\n';
+                if (ch == '\n' || ch == '\0') {
+                    line[lp] = '\0';
+                    if (lp > 0) execute_command(line);
+                    lp = 0;
+                } else if (lp < 79) {
+                    line[lp++] = ch;
+                }
+            }
+        } else {
+            print(cmd, 0x0C);
+            print(": comando nao encontrado\n", 0x0C);
+        }
     }
 }

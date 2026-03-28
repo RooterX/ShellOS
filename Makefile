@@ -10,8 +10,11 @@ all:
 	    -nostdlib -nostartfiles -c commands.c -o build/commands.o
 	gcc -m32 -ffreestanding -fno-pic -fno-pie -fno-stack-protector \
 	    -nostdlib -nostartfiles -c fs.c -o build/fs.o
+	gcc -m32 -ffreestanding -fno-pic -fno-pie -fno-stack-protector \
+	    -nostdlib -nostartfiles -c write.c -o build/write.o
 	ld -m elf_i386 -T linker.ld -e _entry \
-	    build/entry.o build/kernel.o build/shell.o build/commands.o build/fs.o \
+	    build/entry.o build/kernel.o build/shell.o build/commands.o \
+	    build/fs.o build/write.o \
 	    memman/target/i686-unknown-linux-gnu/release/libmemman.a \
 	    -o build/kernel.elf
 	objcopy -O binary build/kernel.elf build/kernel.bin
@@ -32,9 +35,9 @@ package: all
 	  -boot-info-table \
 	  -o dist/shellOS.iso \
 	  iso/
-	echo "==> dist/shellOS.img  (raw)"
-	echo "==> dist/shellOS.vdi  (VirtualBox)"
-	echo "==> dist/shellOS.iso  (ISO)"
+	echo "==> dist/shellOS.img"
+	echo "==> dist/shellOS.vdi"
+	echo "==> dist/shellOS.iso"
 
 clean:
 	rm -rf build/ dist/ iso/

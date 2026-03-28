@@ -131,3 +131,25 @@ int fs_rm(const char *dirname, const char *filename) {
     }
     return -1;
 }
+
+int fs_write_data(File *f, const char *data, int len) {
+    if (!f || len >= MAX_FILESIZE) return -1;
+    for (int i = 0; i < len; i++)
+        f->data[i] = data[i];
+    f->size = len;
+    f->data[len] = '\0';
+    return 0;
+}
+
+File* fs_find(const char *dirname, const char *filename) {
+    for (int i = 0; i < dir_count; i++) {
+        if (!dirs[i].used) continue;
+        if (fs_strcmp(dirs[i].name, dirname) != 0) continue;
+        for (int j = 0; j < dirs[i].file_count; j++) {
+            if (dirs[i].files[j].used &&
+                fs_strcmp(dirs[i].files[j].name, filename) == 0)
+                return &dirs[i].files[j];
+        }
+    }
+    return 0; // nao encontrado, nao cria
+}
