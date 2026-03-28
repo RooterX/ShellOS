@@ -1,3 +1,4 @@
+void fs_init();
 void shell_run();
 void clear_screen();
 void print(const char *str, unsigned char color);
@@ -84,6 +85,7 @@ char read_key() {
 __attribute__((section(".text")))
 void _start() {
     clear_screen();
+    fs_init(); 
     print("shellOS> ", 0x0A);
     prompt_x = 9;
     update_cursor(cursor_x, cursor_y);

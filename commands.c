@@ -4,6 +4,11 @@ extern int cursor_x;
 extern int cursor_y;
 extern int prompt_x;
 
+// declaracoes do fs.c
+int fs_mkdir(const char *name);
+void fs_ls(void (*print_fn)(const char*, unsigned char));
+int fs_rm(const char *dirname, const char *filename);
+
 int str_cmp(const char *a, const char *b) {
     while (*a && *b && *a == *b) { a++; b++; }
     return *a - *b;
@@ -11,12 +16,15 @@ int str_cmp(const char *a, const char *b) {
 
 void cmd_help() {
     print("comandos disponiveis:\n", 0x0B);
-    print("  help   - lista comandos\n", 0x0F);
-    print("  clear  - limpa a tela\n", 0x0F);
-    print("  echo   - imprime texto\n", 0x0F);
-    print("  halt   - desliga o sistema\n", 0x0F);
-    print("  mem    - info de memoria\n", 0x0F);
-    print("  ver    - versao do shellOS\n", 0x0F);
+    print("  help          - lista comandos\n", 0x0F);
+    print("  clear         - limpa a tela\n", 0x0F);
+    print("  echo          - imprime texto\n", 0x0F);
+    print("  halt          - desliga o sistema\n", 0x0F);
+    print("  mem           - info de memoria\n", 0x0F);
+    print("  ver           - versao do shellOS\n", 0x0F);
+    print("  mkdir <nome>  - cria diretorio\n", 0x0F);
+    print("  ls            - lista arquivos\n", 0x0F);
+    print("  rm <dir/arq>  - remove arquivo\n", 0x0F);
 }
 
 void cmd_echo(char *args) {
@@ -34,20 +42,50 @@ void cmd_halt() {
     print("\ndesligando...\n", 0x0C);
     for (int i = 0; i < 50000000; i++)
         __asm__ volatile ("nop");
-    outw(0x604, 0x2000);   // QEMU/Bochs
-    outw(0x4004, 0x3400);  // VirtualBox
-    outw(0xB004, 0x2000);  // VMware/outros
+    outw(0x604, 0x2000);
+    outw(0x4004, 0x3400);
+    outw(0xB004, 0x2000);
     __asm__ volatile ("cli; hlt");
 }
 
+extern unsigned int mem_used();
+extern unsigned int mem_free_space();
+
 void cmd_mem() {
-    print("memoria VGA:  0xB8000 - 0xB8FA0\n", 0x0F);
-    print("kernel:       0x7E00\n", 0x0F);
-    print("stack:        0x90000\n", 0x0F);
+    print("--- memoria (Basix) ---\n", 0x0B);
+    print("heap:   0x100000 - 0x400000\n", 0x0F);
+    print("kernel: 0x7E00\n", 0x0F);
+    print("stack:  0x90000\n", 0x0F);
+    print("modulo: memman.rs (Rust)\n", 0x0A);
 }
 
 void cmd_ver() {
     print("shellOS v0.1 - feito do zero\n", 0x0A);
+    print("kernel: Basix (Assembly + C + Rust)\n", 0x0A);
+}
+
+void cmd_mkdir(char *args) {
+    if (!args) { print("uso: mkdir <nome>\n", 0x0C); return; }
+    int r = fs_mkdir(args);
+    if (r == -2) print("erro: diretorio ja existe\n", 0x0C);
+    else if (r == -1) print("erro: limite atingido\n", 0x0C);
+    else { print("criado: ", 0x0A); print(args, 0x0A); print("\n", 0x0F); }
+}
+
+void cmd_ls() {
+    fs_ls(print);
+}
+
+void cmd_rm(char *args) {
+    if (!args) { print("uso: rm <dir>/<arquivo>\n", 0x0C); return; }
+    char *slash = 0;
+    for (int i = 0; args[i]; i++) {
+        if (args[i] == '/') { args[i] = '\0'; slash = &args[i+1]; break; }
+    }
+    if (!slash) { print("uso: rm <dir>/<arquivo>\n", 0x0C); return; }
+    int r = fs_rm(args, slash);
+    if (r == -1) print("arquivo nao encontrado\n", 0x0C);
+    else print("removido\n", 0x0A);
 }
 
 void execute_command(char *cmd) {
@@ -71,6 +109,9 @@ void execute_command(char *cmd) {
     else if (str_cmp(cmd, "halt")  == 0) cmd_halt();
     else if (str_cmp(cmd, "mem")   == 0) cmd_mem();
     else if (str_cmp(cmd, "ver")   == 0) cmd_ver();
+    else if (str_cmp(cmd, "mkdir") == 0) cmd_mkdir(args);
+    else if (str_cmp(cmd, "ls")    == 0) cmd_ls();
+    else if (str_cmp(cmd, "rm")    == 0) cmd_rm(args);
     else {
         print(cmd, 0x0C);
         print(": comando nao encontrado\n", 0x0C);
