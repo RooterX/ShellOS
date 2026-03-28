@@ -5,8 +5,8 @@
 <h1 align="center">ShellOS</h1>
 
 <p align="center">
-  Um sistema operacional minimalista feito do zero em Assembly e C,<br>
-  com módulos em Rust e shell interativo próprio.
+  Um sistema operacional minimo feito do zero em Assembly e C,<br>
+  com módulos em Rust e shell interativo.
 </p>
 
 <p align="center">
@@ -21,8 +21,8 @@
 ## Sobre
 
 **ShellOS** é um sistema operacional básico construído do zero com fins educacionais.
-Possui bootloader próprio, kernel chamado **Basix**, shell interativo e sistema de
-arquivos em memória RAM.
+Possui bootloader próprio, kernel chamado **Basix**, shell interativo, sistema de
+arquivos em memória RAM e suporte a execução de scripts.
 
 <p align="center">
   <img src="assets/BasixLogo.png" width="80"/>
@@ -42,6 +42,7 @@ arquivos em memória RAM.
 | `shell.c` | Loop do shell, leitura de input e parser de comandos |
 | `commands.c` | Implementação de todos os comandos do shell |
 | `fs.c` | Sistema de arquivos em RAM — diretórios e arquivos voláteis |
+| `write.c` | Editor de texto minimalista integrado ao shell |
 | `linker.ld` | Script de linkagem — define layout do kernel na memória |
 | `Makefile` | Compilação, empacotamento e execução |
 | `memman/` | Módulo de gerenciamento de memória escrito em **Rust** |
@@ -58,6 +59,7 @@ arquivos em memória RAM.
 | `ls` | Lista diretórios e arquivos |
 | `mkdir <nome>` | Cria um diretório |
 | `rm <dir>/<arq>` | Remove um arquivo |
+| `write <arq>` | Abre o editor de texto (F2 salvar, F10 sair) |
 | `mem` | Informações de memória do kernel |
 | `ver` | Versão do ShellOS |
 | `halt` | Desliga o sistema |
@@ -90,8 +92,9 @@ make package
 | Ambiente | Status |
 |----------|--------|
 | QEMU | ✅ Testado e funcional |
-| VirtualBox | ⚠️ Funcional, sem garantia total |
-| Hardware real | ⚠️ Sem garantia |
+| VirtualBox | ⚠️ Funcional, passivel de bugs |
+| VMware | ⚠️ Sem garantia, possiveis falhas críticas |
+| Hardware real | ⚠️ Sem garantia, não recomendável |
 
 ---
 
@@ -115,3 +118,9 @@ Qualquer pessoa pode forkear e distribuir sua própria versão gratuitamente.
 Projeto construído com auxílio de IA como ferramenta de aprendizado,
 similar ao uso de documentação técnica e OSDev Wiki.
 Desenvolvido no **Linux Mint** com **Visual Studio Code**.
+
+---
+
+## Observação
+
+O Autor do projeto é um **estudante** de programação e linux, tenha paciencia com qualquer possivel erro!
