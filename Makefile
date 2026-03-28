@@ -12,9 +12,12 @@ all:
 	    -nostdlib -nostartfiles -c fs.c -o build/fs.o
 	gcc -m32 -ffreestanding -fno-pic -fno-pie -fno-stack-protector \
 	    -nostdlib -nostartfiles -c write.c -o build/write.o
+	gcc -m32 -ffreestanding -fno-pic -fno-pie -fno-stack-protector \
+	    -nostdlib -nostartfiles -c makeux.c -o build/makeux.o
 	ld -m elf_i386 -T linker.ld -e _entry \
 	    build/entry.o build/kernel.o build/shell.o build/commands.o \
 	    build/fs.o build/write.o \
+	    build/makeux.o \
 	    memman/target/i686-unknown-linux-gnu/release/libmemman.a \
 	    -o build/kernel.elf
 	objcopy -O binary build/kernel.elf build/kernel.bin

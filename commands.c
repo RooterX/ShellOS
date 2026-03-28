@@ -1,3 +1,4 @@
+void cmd_makeux();
 void cmd_write(char *args);
 void print(const char *str, unsigned char color);
 void clear_screen();
@@ -35,6 +36,7 @@ void cmd_help() {
     print("  ls            - lista arquivos\n", 0x0F);
     print("  rm <dir/arq>  - remove arquivo\n", 0x0F);
     print("  write <arq>   - editor de texto\n", 0x0F);
+    print("  makeux        - interface grafica\n", 0x0F);
 }
 
 void cmd_echo(char *args) {
@@ -122,6 +124,7 @@ void execute_command(char *cmd) {
     else if (str_cmp(cmd, "mkdir") == 0) cmd_mkdir(args);
     else if (str_cmp(cmd, "ls")    == 0) cmd_ls();
     else if (str_cmp(cmd, "rm")    == 0) cmd_rm(args);
+    else if (str_cmp(cmd, "makeux") == 0) cmd_makeux();
 else if (str_cmp(cmd, "write") == 0) cmd_write(args);
     else {
         // tenta executar como arquivo em /file
