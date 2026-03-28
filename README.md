@@ -22,7 +22,7 @@
 
 **ShellOS** é um sistema operacional básico construído do zero com fins educacionais.
 Possui bootloader próprio, kernel chamado **Basix**, shell interativo, sistema de
-arquivos em memória RAM e suporte a execução de scripts.
+arquivos em memória RAM, editor de texto integrado e interface gráfica TUI.
 
 <p align="center">
   <img src="assets/BasixLogo.png" width="80"/>
@@ -43,6 +43,7 @@ arquivos em memória RAM e suporte a execução de scripts.
 | `commands.c` | Implementação de todos os comandos do shell |
 | `fs.c` | Sistema de arquivos em RAM — diretórios e arquivos voláteis |
 | `write.c` | Editor de texto minimalista integrado ao shell |
+| `makeux.c` | Interface gráfica TUI estilo Windows 1.0 |
 | `linker.ld` | Script de linkagem — define layout do kernel na memória |
 | `Makefile` | Compilação, empacotamento e execução |
 | `memman/` | Módulo de gerenciamento de memória escrito em **Rust** |
@@ -60,9 +61,25 @@ arquivos em memória RAM e suporte a execução de scripts.
 | `mkdir <nome>` | Cria um diretório |
 | `rm <dir>/<arq>` | Remove um arquivo |
 | `write <arq>` | Abre o editor de texto (F2 salvar, F10 sair) |
+| `makeux` | Abre a interface gráfica TUI |
 | `mem` | Informações de memória do kernel |
 | `ver` | Versão do ShellOS |
 | `halt` | Desliga o sistema |
+
+---
+
+## MakeUX — Interface Gráfica
+
+O MakeUX é um módulo de interface gráfica TUI integrado ao ShellOS.
+Acesse com o comando `makeux` no shell.
+
+| Tecla | Ação |
+|-------|------|
+| `F1` | Voltar ao shell |
+| `F2` | Visualizar arquivos |
+| `F3` | Informações de memória |
+| `F10` | Sair do MakeUX |
+| `F12` | Desligar o sistema |
 
 ---
 
