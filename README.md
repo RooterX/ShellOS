@@ -1,53 +1,89 @@
-# ShellOS
+<p align="center">
+  <img src="assets/ShellLogo.png" width="120"/>
+</p>
 
-Um sistema operacional básico feito do zero em Assembly e C, com foco educacional.
+<h1 align="center">ShellOS</h1>
 
-## Sobre o projeto
+<p align="center">
+  Um sistema operacional minimalista feito do zero em Assembly e C,<br>
+  com módulos em Rust e shell interativo próprio.
+</p>
 
-**ShellOS** é um sistema operacional minimalista construído do zero, composto por:
+<p align="center">
+  <img src="https://img.shields.io/badge/licença-MIT-green"/>
+  <img src="https://img.shields.io/badge/linguagens-Assembly%20%7C%20C%20%7C%20Rust-blue"/>
+  <img src="https://img.shields.io/badge/testado-QEMU-orange"/>
+  <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow"/>
+</p>
 
-- **Basix** — o kernel do sistema, escrito em C
-- **Bootloader** — escrito em Assembly x86
-- **Shell** — interface de linha de comando integrada ao kernel
+---
 
-O projeto nasceu com fins educacionais, explorando conceitos fundamentais de
-sistemas operacionais como bootloader, modo protegido x86, VGA memory-mapped,
-driver de teclado PS/2 e arquitetura de shell.
+## Sobre
+
+**ShellOS** é um sistema operacional básico construído do zero com fins educacionais.
+Possui bootloader próprio, kernel chamado **Basix**, shell interativo e sistema de
+arquivos em memória RAM.
+
+<p align="center">
+  <img src="assets/BasixLogo.png" width="80"/>
+  <br>
+  <i>Basix — o kernel do ShellOS</i>
+</p>
+
+---
+
+## Estrutura do projeto
+
+| Arquivo | Descrição |
+|---------|-----------|
+| `bootloader.asm` | Bootloader em Assembly x86 — inicializa o sistema e carrega o kernel |
+| `entry.asm` | Entry point do kernel — ponto de entrada em 32 bits |
+| `kernel.c` | **Basix** — driver VGA, teclado PS/2, scroll, inicialização |
+| `shell.c` | Loop do shell, leitura de input e parser de comandos |
+| `commands.c` | Implementação de todos os comandos do shell |
+| `fs.c` | Sistema de arquivos em RAM — diretórios e arquivos voláteis |
+| `linker.ld` | Script de linkagem — define layout do kernel na memória |
+| `Makefile` | Compilação, empacotamento e execução |
+| `memman/` | Módulo de gerenciamento de memória escrito em **Rust** |
+
+---
 
 ## Comandos disponíveis
 
 | Comando | Descrição |
 |---------|-----------|
-| `help`  | Lista todos os comandos disponíveis |
+| `help` | Lista todos os comandos |
 | `clear` | Limpa a tela |
-| `echo`  | Imprime texto na tela |
-| `mem`   | Exibe informações de memória |
-| `ver`   | Exibe a versão do ShellOS |
-| `halt`  | Desliga o sistema |
+| `echo <texto>` | Imprime texto na tela |
+| `ls` | Lista diretórios e arquivos |
+| `mkdir <nome>` | Cria um diretório |
+| `rm <dir>/<arq>` | Remove um arquivo |
+| `mem` | Informações de memória do kernel |
+| `ver` | Versão do ShellOS |
+| `halt` | Desliga o sistema |
+
+---
 
 ## Requisitos
-
-- `nasm`
-- `gcc` (com suporte a `-m32`)
-- `binutils` (ld, objcopy)
-- `qemu-system-x86`
-- `xorriso`
-- `VBoxManage` (opcional, para gerar .vdi)
 ```bash
 sudo apt install nasm gcc make qemu-system-x86 xorriso
 ```
+
+---
 
 ## Compilar e rodar
 ```bash
 # compilar
 make
 
-# testar no QEMU (recomendado)
+# testar no QEMU (ambiente recomendado)
 make run
 
-# gerar pacotes de distribuição (.img, .vdi, .iso)
+# gerar pacotes (.img .vdi .iso)
 make package
 ```
+
+---
 
 ## Compatibilidade
 
@@ -55,31 +91,27 @@ make package
 |----------|--------|
 | QEMU | ✅ Testado e funcional |
 | VirtualBox | ⚠️ Funcional, sem garantia total |
-| VMware | ⚠️ Sem garantia |
 | Hardware real | ⚠️ Sem garantia |
 
-> O ambiente de desenvolvimento e testes foi **Linux Mint**, utilizando **Visual Studio Code**.
+---
 
-## Estrutura do projeto
-```
-shellOS/
-├── bootloader.asm   # bootloader em Assembly
-├── entry.asm        # entry point do kernel
-├── kernel.c         # Basix — driver VGA, teclado, scroll
-├── shell.c          # loop do shell e parser de comandos
-├── commands.c       # implementação dos comandos
-├── linker.ld        # script de linkagem
-└── Makefile         # compilação e empacotamento
-```
+## Tecnologias
+
+- **Assembly x86** — bootloader e entry point
+- **C** — kernel Basix, shell, sistema de arquivos
+- **Rust** — módulo de gerenciamento de memória (`memman`)
+
+---
 
 ## Licença
 
-MIT License — livre para usar, modificar e distribuir.
+MIT — livre para usar, modificar e distribuir.
 Qualquer pessoa pode forkear e distribuir sua própria versão gratuitamente.
+
+---
 
 ## Aviso
 
-Este projeto foi construído com auxílio de IA como ferramenta de aprendizado,
-similar ao uso de documentação técnica e OSDev Wiki. Todas as decisões de
-arquitetura, debug e implementação foram tomadas e compreendidas pelo autor.
-Produzido no **Linux Mint** com **Visual Studio Code**.
+Projeto construído com auxílio de IA como ferramenta de aprendizado,
+similar ao uso de documentação técnica e OSDev Wiki.
+Desenvolvido no **Linux Mint** com **Visual Studio Code**.
