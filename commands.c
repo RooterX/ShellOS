@@ -1,3 +1,7 @@
+void cmd_shinstall_run();
+extern int system_installed;
+char read_key();
+extern int system_installed;
 void cmd_makeux();
 void cmd_write(char *args);
 void print(const char *str, unsigned char color);
@@ -37,6 +41,7 @@ void cmd_help() {
     print("  rm <dir/arq>  - remove arquivo\n", 0x0F);
     print("  write <arq>   - editor de texto\n", 0x0F);
     print("  makeux        - interface grafica\n", 0x0F);
+    print("  shinstall     - instalar o shellOS\n", 0x0F);
 }
 
 void cmd_echo(char *args) {
@@ -71,9 +76,18 @@ void cmd_mem() {
     print("modulo: memman.rs (Rust)\n", 0x0A);
 }
 
+void cmd_shinstall() {
+    if (system_installed) {
+        print("erro: ShellOS ja esta instalado!\n", 0x0C);
+        print("reinicie para reinstalar.\n", 0x0C);
+        return;
+    }
+    cmd_shinstall_run();
+}
+
 void cmd_ver() {
-    print("shellOS v0.1 - feito do zero\n", 0x0A);
-    print("kernel: Basix (Assembly + C + Rust)\n", 0x0A);
+    print("shellOS v0.1\n", 0x0F);
+    print("kernel: Basix (Assembly + C + Rust)\n", 0x0F);
 }
 
 void cmd_mkdir(char *args) {
@@ -125,6 +139,7 @@ void execute_command(char *cmd) {
     else if (str_cmp(cmd, "ls")    == 0) cmd_ls();
     else if (str_cmp(cmd, "rm")    == 0) cmd_rm(args);
     else if (str_cmp(cmd, "makeux") == 0) cmd_makeux();
+    else if (str_cmp(cmd, "shinstall") == 0) cmd_shinstall();
 else if (str_cmp(cmd, "write") == 0) cmd_write(args);
     else {
         // tenta executar como arquivo em /file
@@ -147,4 +162,57 @@ else if (str_cmp(cmd, "write") == 0) cmd_write(args);
             print(": comando nao encontrado\n", 0x0C);
         }
     }
+}
+
+void cmd_keytest() {
+    print("pressione uma tecla (F10 pra sair):\n", 0x0F);
+    while (1) {
+        char c = read_key();
+        if (c == (char)0x44) return; // F10 sai
+        // imprime o valor hex da tecla
+        unsigned char v = (unsigned char)c;
+        char hex[5];
+        hex[0] = '0';
+        hex[1] = 'x';
+        hex[2] = "0123456789ABCDEF"[v >> 4];
+        hex[3] = "0123456789ABCDEF"[v & 0xF];
+        hex[4] = 0;
+        print(hex, 0x0E);
+        print(" ", 0x0F);
+    }
+}
+
+int ata_detect();
+int ata_write(unsigned int lba, unsigned char *buf);
+int ata_read(unsigned int lba, unsigned char *buf);
+
+void cmd_atatest() {
+    print("detectando disco ATA...\n", 0x0F);
+    if (!ata_detect()) {
+        print("erro: disco nao encontrado!\n", 0x0C);
+        return;
+    }
+    print("disco encontrado!\n", 0x0A);
+
+    // testa escrita/leitura no setor 100 (longe do kernel)
+    unsigned char buf[512];
+    for (int i = 0; i < 512; i++) buf[i] = 0xAB;
+
+    if (ata_write(100, buf) < 0) {
+        print("erro: falha na escrita!\n", 0x0C);
+        return;
+    }
+    print("escrita ok!\n", 0x0A);
+
+    // le de volta e verifica
+    unsigned char buf2[512];
+    if (ata_read(100, buf2) < 0) {
+        print("erro: falha na leitura!\n", 0x0C);
+        return;
+    }
+
+    if (buf2[0] == 0xAB && buf2[511] == 0xAB)
+        print("leitura ok! ATA funcionando!\n", 0x0A);
+    else
+        print("erro: dados corrompidos!\n", 0x0C);
 }

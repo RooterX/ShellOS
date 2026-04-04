@@ -96,7 +96,15 @@ if (c == (char)0x44) {
     update_cursor(cursor_x, cursor_y);
     return;
 }
-
+// no loop do write, adiciona antes do F10:
+if (c == 3) { // Ctrl+C
+    clear_screen();
+    cursor_x = 0;
+    cursor_y = 0;
+    prompt_x = 0;
+    update_cursor(0, 0);
+    return;
+}
         if (c == '\b' && buf_pos > 0) {
             buf_pos--;
             if (cursor_x > 0) cursor_x--;

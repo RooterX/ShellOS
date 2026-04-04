@@ -66,7 +66,7 @@ void ux_draw_desktop() {
     // barra de status no topo
     ux_fill(0, 0, 80, 1, ' ', 0x70);
     ux_print_at(1, 0, "ShellOS MakeUX", 0x70);
-    ux_print_at(60, 0, "F10 voltar ao shell", 0x70);
+    ux_print_at(60, 0, "", 0x70);
 
     // barra de tarefas embaixo
     ux_fill(0, 24, 80, 1, ' ', 0x70);
@@ -78,13 +78,13 @@ void ux_draw_desktop() {
 
     // conteudo da janela
     ux_print_at(12, 5,  "Sistema: ShellOS v0.1",        0x1F);
-    ux_print_at(12, 6,  "Kernel:  Basix",               0x1F);
-    ux_print_at(12, 7,  "Shell:   shellOS shell",       0x1F);
+    ux_print_at(12, 6,  "Kernel:  BASIX",               0x1F);
+    ux_print_at(12, 7,  "Shell:   shellOS terminal",       0x1F);
     ux_print_at(12, 8,  "Memoria: 0x100000-0x400000",   0x1F);
     ux_print_at(12, 9,  "VGA:     80x25 text mode",     0x1F);
     ux_print_at(12, 11, "Linguagens:",                  0x1B);
     ux_print_at(12, 12, "  Assembly + C + Rust",        0x1F);
-    ux_print_at(12, 14, "Pressione F10 para sair",      0x18);
+    ux_print_at(12, 14, "",      0x18);
 
  // janela secundaria
     ux_draw_box(54, 5, 24, 12, 0x2F);
@@ -120,7 +120,7 @@ void cmd_makeux() {
             // chama fs_ls mas precisa printar na janela
             ux_print_at(12, 5, "sys/", 0x1B);
             ux_print_at(12, 6, "file/", 0x1B);
-            ux_print_at(12, 12, "F1 voltar", 0x18);
+            ux_print_at(12, 12, "", 0x18);
             continue;
         }
 
@@ -133,7 +133,7 @@ void cmd_makeux() {
             ux_print_at(12, 6, "kernel: 0x7E00",            0x1F);
             ux_print_at(12, 7, "stack:  0x90000",           0x1F);
             ux_print_at(12, 8, "modulo: memman.rs (Rust)",  0x1A);
-            ux_print_at(12, 12, "F1 voltar", 0x18);
+            ux_print_at(12, 12, "", 0x18);
             continue;
         }
 
