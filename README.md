@@ -22,12 +22,15 @@
 
 **ShellOS** é um sistema operacional básico construído do zero com fins educacionais.
 Possui bootloader próprio, kernel chamado **Basix**, shell interativo, sistema de
-arquivos em memória RAM, editor de texto integrado e interface gráfica TUI.
+arquivos em memória RAM, editor de texto integrado, interface gráfica TUI e instalador.
+
+> **Nota:** O kernel Basix é um kernel educacional minimalista inspirado no POSIX.
+> O projeto está migrando para Linux como base para amadurecer o sistema.
 
 <p align="center">
   <img src="assets/BasixLogo.png" width="80"/>
   <br>
-  <i>Basix — o kernel do ShellOS</i>
+  <i>Basix — o kernel educacional do ShellOS</i>
 </p>
 
 ---
@@ -44,6 +47,10 @@ arquivos em memória RAM, editor de texto integrado e interface gráfica TUI.
 | `fs.c` | Sistema de arquivos em RAM — diretórios e arquivos voláteis |
 | `write.c` | Editor de texto minimalista integrado ao shell |
 | `makeux.c` | Interface gráfica TUI estilo Windows 1.0 |
+| `shinstall.c` | Instalador visual com seleção de idioma, teclado e particionamento |
+| `keymap.c` | Layouts de teclado — ABNT2, QWERTY US, QWERTZ DE, AZERTY FR |
+| `ata.c` | Driver ATA — leitura e escrita no disco |
+| `partition.c` | Particionador — escreve tabela MBR no disco |
 | `linker.ld` | Script de linkagem — define layout do kernel na memória |
 | `Makefile` | Compilação, empacotamento e execução |
 | `memman/` | Módulo de gerenciamento de memória escrito em **Rust** |
@@ -62,6 +69,7 @@ arquivos em memória RAM, editor de texto integrado e interface gráfica TUI.
 | `rm <dir>/<arq>` | Remove um arquivo |
 | `write <arq>` | Abre o editor de texto (F2 salvar, F10 sair) |
 | `makeux` | Abre a interface gráfica TUI |
+| `shinstall` | Instala o ShellOS no disco |
 | `mem` | Informações de memória do kernel |
 | `ver` | Versão do ShellOS |
 | `halt` | Desliga o sistema |
@@ -70,9 +78,6 @@ arquivos em memória RAM, editor de texto integrado e interface gráfica TUI.
 
 ## MakeUX — Interface Gráfica
 
-O MakeUX é um módulo de interface gráfica TUI integrado ao ShellOS.
-Acesse com o comando `makeux` no shell.
-
 | Tecla | Ação |
 |-------|------|
 | `F1` | Voltar ao shell |
@@ -80,6 +85,17 @@ Acesse com o comando `makeux` no shell.
 | `F3` | Informações de memória |
 | `F10` | Sair do MakeUX |
 | `F12` | Desligar o sistema |
+
+---
+
+## Layouts de teclado suportados
+
+| Layout | Região |
+|--------|--------|
+| ABNT2 | Português (Brasil) |
+| QWERTY | English (US) |
+| QWERTZ | Deutsch (DE) |
+| AZERTY | Français (FR) |
 
 ---
 
@@ -120,6 +136,24 @@ make package
 - **Assembly x86** — bootloader e entry point
 - **C** — kernel Basix, shell, sistema de arquivos
 - **Rust** — módulo de gerenciamento de memória (`memman`)
+
+---
+
+## Roadmap
+
+- [x] Bootloader próprio
+- [x] Kernel Basix
+- [x] Shell interativo
+- [x] Sistema de arquivos em RAM
+- [x] Editor de texto
+- [x] Interface gráfica TUI (MakeUX)
+- [x] Instalador (ShInstall)
+- [x] Driver ATA
+- [x] Layouts de teclado
+- [ ] Migração para kernel Linux
+- [ ] Rede
+- [ ] Sistema de arquivos persistente
+- [ ] MakeUX completo
 
 ---
 
